@@ -7,7 +7,8 @@ import (
 	"strings"
 )
 
-func listDisks() {
+func listDisks(Arguments []string) {
+	fmt.Println(Arguments)
 
 	type DeviceInfo struct {
 		Name   string

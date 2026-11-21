@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -14,6 +15,7 @@ func listDisks(Arguments []string) {
 		Name   string
 		Vendor string
 		Model  string
+		Size   int
 	}
 
 	const path = "/sys/block"
@@ -41,16 +43,30 @@ func listDisks(Arguments []string) {
 			return
 		}
 
+		size, err := os.ReadFile(fullPath + "/size")
+
+		if err != nil {
+			fmt.Println("Error reading block devices:", err)
+			return
+		}
+
+		sectors, err := strconv.Atoi(strings.TrimSpace(string(size)))
+
+		if err != nil {
+			return
+		}
+
 		diskInfoSlice = append(diskInfoSlice, DeviceInfo{
 			Name:   item.Name(),
 			Vendor: strings.TrimSpace(string(vender)),
 			Model:  strings.TrimSpace(string(model)),
+			Size:   (sectors * 512) / (1024 * 1024 * 1024),
 		})
 	}
 
 	for _, item := range diskInfoSlice {
 
-		fmt.Printf("Name : %s | Vender : %s | Model :%s\n", item.Name, item.Vendor, item.Model)
+		fmt.Printf("Name : %s | Vender : %s | Model :%s | Size : %v GB \n", item.Name, item.Vendor, item.Model, item.Size)
 	}
 
 }

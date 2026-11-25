@@ -1,4 +1,4 @@
-package main
+package devices
 
 import (
 	"fmt"
@@ -8,8 +8,7 @@ import (
 	"strings"
 )
 
-func listDisks(Arguments []string) {
-	fmt.Println(Arguments)
+func ListDisk() {
 
 	type DeviceInfo struct {
 		Name   string
